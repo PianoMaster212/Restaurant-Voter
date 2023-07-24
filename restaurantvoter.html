@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Restaurant Voter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <h1>Restaurant Voter</h1>
+  <button onclick="addRestaurant()">Add Restaurant</button>
+  <div id="restaurantList" style="margin-top: 10px;"></div>
+  <button onclick="startVoting()" style="margin-top: 10px;">Start Voting</button>
+  <p style="float: right; margin: 15px 5px 0 0; color: green;" id="numRestaurants">No Restaurants Added</p>
+  <button onclick="deleteAll()" style="float: right; margin-top: 10px; margin-right: 5px;">Delete All &#10006;</button>
+
+  <script>
+    const restaurantList = document.getElementById("restaurantList");
+    const numRestaurantsElem = document.getElementById("numRestaurants");
+    let restaurants = [];
+
+    function addRestaurant() {
+      const restaurantName = prompt("Enter the restaurant name:");
+      if (restaurantName === null || restaurantName.trim() === "") return;
+
+      const restaurantDescription = prompt("Enter the restaurant description:");
+      if (restaurantDescription === null) return;
+
+      const restaurant = {
+        name: restaurantName,
+        description: restaurantDescription,
+      };
+
+      restaurants.push(restaurant);
+      updateRestaurantList();
+    }
+
+    function editRestaurant(index) {
+      const restaurantName = prompt("Edit the restaurant name:", restaurants[index].name);
+      if (restaurantName === null || restaurantName.trim() === "") return;
+
+      const restaurantDescription = prompt("Edit the restaurant description:", restaurants[index].description);
+      if (restaurantDescription === null) return;
+
+      restaurants[index].name = restaurantName;
+      restaurants[index].description = restaurantDescription;
+      updateRestaurantList();
+    }
+
+    function deleteRestaurant(index) {
+      restaurants.splice(index, 1);
+      updateRestaurantList();
+    }
+
+    function deleteAll() {
+      if (confirm("Are you sure you want to delete all restaurants?")) {
+        restaurants = [];
+        updateRestaurantList();
+      }
+    }
+
+    function updateRestaurantList() {
+      restaurantList.innerHTML = "";
+      restaurants.forEach((restaurant, index) => {
+        const restaurantElement = document.createElement("div");
+        const restaurantTitle = document.createElement("h3");
+        const restaurantDesc = document.createElement("p");
+        const editIcon = document.createElement("span");
+        const deleteIcon = document.createElement("span");
+
+        restaurantTitle.textContent = restaurant.name;
+        restaurantDesc.textContent = restaurant.description;
+        editIcon.innerHTML = "&#9998;";
+        deleteIcon.innerHTML = "&#10006;";
+
+        restaurantElement.style.border = "1px solid #ccc";
+        restaurantElement.style.padding = "10px";
+        restaurantElement.style.marginBottom = "10px";
+
+        restaurantTitle.style.margin = "0";
+        restaurantDesc.style.margin = "0";
+
+        restaurantElement.appendChild(restaurantTitle);
+        restaurantElement.appendChild(restaurantDesc);
+
+        editIcon.style.float = "right";
+        deleteIcon.style.float = "right";
+
+        editIcon.style.cursor = "pointer";
+        deleteIcon.style.cursor = "pointer";
+
+        editIcon.onclick = () => editRestaurant(index);
+        deleteIcon.onclick = () => deleteRestaurant(index);
+
+        restaurantTitle.appendChild(editIcon);
+        restaurantTitle.appendChild(deleteIcon);
+        restaurantElement.appendChild(restaurantTitle);
+
+        restaurantList.appendChild(restaurantElement);
+      });
+
+      const numRestaurants = restaurants.length;
+      numRestaurantsElem.textContent = numRestaurants === 0 ? "No Restaurants Added" : `${numRestaurants} Restaurants Added`;
+      numRestaurantsElem.style.color = numRestaurants >= 2 ? "green" : "";
+    }
+
+    function startVoting() {
+      if (restaurants.length === 0) {
+        alert("Enter the restaurant name:");
+      } else {
+        // Your code for starting the voting process goes here
+        console.log("Voting started!");
+      }
+    }
+
+    window.addEventListener("blur", function() {
+      restaurants.pop();
+    });
+
+  </script>
+
+</body>
+</html>
